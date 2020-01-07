@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+    data = {};
+   
+    function updatePage(page_no){
+        data = {'page': page_no}
+        console.log(data);
+        common(data);
+    }
+
+    function addToPage(data){
+        $( "#xyz" ).remove();
+        $( "#def" ).remove();
+        var initial="";
+         initial+='<div class="row" id="xyz">'
+          initial+= '<div id="abc">'
+                for (var i = 0; i < data.products.length; i++) { 
+                    initial+= '<div class="col-md-4">'
+                    initial+=    '<div class="thumbnail">'
+                        initial+= '<div class="caption">'
+                            initial+= `<h3><button style="border: 2px solid #7B241C;background-color: white;color: black;" onclick="addToCart('`+data.products[i]._id+`')" id="`+data.products[i]._id+`">`+ data.products[i].productName+ `</button></h3>`
+                            
+                                // initial+=    '<h3><a href="./../name/'+ data.products[i]._id +'">'+ data.products[i].productName +'</a></h3>'
+                            initial+=    '<p>'+ data.products[i].productDescription +'</p>'
+                            initial+=    `<p><span id='`+data.products[i]._id+`_PRICE'>`+ data.products[i].productPrice +`</span>$</p>`
+                            initial+=    `<p><input type="number" name="prodQuan" id='`+data.products[i]._id+`_QUAN' placeholder="Enter Quantity" min="1" required></p>`
+
+
+                            initial+=    `<p><span id='`+data.products[i]._id+`_STOCK' > Available Quantity: `+ data.products[i].productQuantity +`</span></p>`
+
+                            if(data.user)
+                            {
+                                if(data.user.role=='admin')
+                                {
+                                    initial+= `<a href="/edit/click/`+data.products[i]._id+`" id="`+ data.products[i]._id +`" name="button" style="background-color:#7B241C ;" class="btn btn-primary">Edit  <span class ="glyphicon glyphicon-edit"></span></a><br><br>`
+                                    initial+= `<a href="/delete/click/`+data.products[i]._id+`" id="`+ data.products[i]._id+`"  name="button" style="background-color:#7B241C ;" class="btn btn-primary">Delete  <span class ="glyphicon glyphicon-edit"></span></a><br><br>`
+                                }
+                            }
+
+
+                            
+                            initial+= '</div>'
+                        initial+= '</div>'
+                    initial+= '</div>'
+                }
+        initial+= '</div></div>'
+
+        var final = "";
+        if (data.pages > 0) { 
+                final += '<div id="def"><ul class="pagination text-center">';
+                if (data.pageNo == 1) {
+                    final += '<li class="disabled"><a>First</a></li>';
+                } else {
+                    final += '<li onclick="updatePage(this.id)" id="1"><a>First</a></li>';
+                } 
+                var i = (Number(data.pageNo) > 5 ? Number(data.pageNo) - 4 : 1);
+                if (i !== 1) { 
+                    final += '<li class="disabled"><a>...</a></li>';
+                }
+                for (; i <= (Number(data.pageNo) + 4) && i <= data.pages; i++) {
+                        if (i == data.pageNo) { 
+                            final +=  '<li class="active"><a>'+ i +'</a></li>';
+                        } else {
+                            final += '<li onclick="updatePage(this.id)" id="'+ i +'"><a>'+ i +'</a></li>';
+                        }
+                        if (i == Number(data.pageNo) + 4 && i < data.pages) { 
+                            final += '<li class="disabled"><a>...</a></li>';
+                        }
+                    }
+                    if (data.pageNo == data.pages) {
+                        final +=  '<li class="disabled"><a>Last</a></li>';
+                    } else { 
+                        final +=  '<li onclick="updatePage(this.id)" id="'+ data.pages + '"><a>Last</a></li>';
+                    }
+                    final +='</ul>';
+            final += '</div>';
+         }
+
+         $('#mno').append(initial);
+         $('#mno').append(final);
+        console.log(data.pageNo);
+    }
+
+    function common(data) {
+        $.ajax({
+            type: 'GET',
+            url : '/products/productlist/data',
+            data: data, 
+            success: (data)=> {
+                // console.log(data);
+                addToPage(data);
+            }
+        });
+
+    }
+
+</script>
+
+</head>
+<body class="bg">
+    <% include partials/nav.ejs %>
+    <div class="container" id="mno">
+        <div class="row" id='xyz'>
+            <div id='abc'>
+                <% for (var i = 0; i < products.length; i++) { %>
+                    <div class="col-md-4">
+                        <div class="thumbnail">
+                            <div class="caption">
+                                    <h3><button style="border: 2px solid #7B241C;background-color: white;color: black;" onclick="addToCart('<%=products[i]._id%>')"  id="<%=products[i]._id%>"> <%=products[i].productName%></button></h3>
+                                        <p><%= products[i].productDescription %></p>
+                                <p><span id='<%=products[i]._id%>_PRICE'><%= products[i].productPrice %></span>$</p>
+                                <p><input type="number" name="prodQuan" placeholder="Enter Quantity" id="<%=products[i]._id%>_QUAN" min="1" required ></p>
+                                <div class="clearfix"><p id='<%= products[i]._id %>_STOCK'>Available Quantity: <%= products[i].productQuantity %></p></div>
+                                 
+                                <% if(user){ %>
+                                    <% if(user.role=='admin') { %>
+                                        <a href="/edit/click/<%=products[i]._id%>" id="<%= products[i]._id %>" name="button" class="btn btn-primary" style="background-color:#7B241C ;">Edit  <span class ="glyphicon glyphicon-edit"></span></a><br><br>
+                                    <a href="/delete/click/<%=products[i]._id%>" id="<%= products[i]._id %>" name="button" class="btn btn-primary" style="background-color:#7B241C ;">Delete  <span class ="glyphicon glyphicon-trash"></span></a><br><br>
+                                    <% } }%>
+                              </div>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+        <div id='def'>
+            <% if (pages) { %>
+                <ul class="pagination text-center">
+                    <% if (current == 1) { %>
+                        <li class="disabled"><a>First</a></li>
+                    <% } else { %>
+                        <li onclick="updatePage(this.id)" id="1"><a>First</a></li>
+                    <% } %>
+                    <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
+                    <% if (i !== 1) { %>
+                        <li class="disabled"><a>...</a></li>
+                    <% } %>
+                    <% for (; i <= (Number(current) + 4) && i <= pages; i++) { %>
+                        <% if (i == current) { %>
+                            <li class="active"><a><%= i %></a></li>
+                        <% } else { %>
+                            <li onclick="updatePage(this.id)" id="<%= i %>"><a><%= i %></a></li>
+                        <% } %>
+                        <% if (i == Number(current) + 4 && i < pages) { %>
+                            <li class="disabled"><a>...</a></li>
+                        <% } %>
+                    <% } %>
+                    <% if (current == pages) { %>
+                        <li class="disabled"><a>Last</a></li>
+                    <% } else { %>
+                        <li onclick="updatePage(this.id)" id="<%= pages %>"><a>Last</a></li>
+                    <% } %>
+                </ul>
+            <% } %>
+        </div>
+    </div>
+
+
+
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+function addToCart(x){
+
+    quan=document.getElementById(x+'_QUAN').value;
+    stock= (+document.getElementById(x+'_STOCK').innerHTML);
+    price=document.getElementById(x+'_PRICE').innerHTML;
+    name=document.getElementById(x).innerHTML;
+
+    if(+quan >stock)
+    alert('Not Enough In Stock');
+
+else
+    $.post("/addToCart", {product_id:x, productName:name,price:price,quantity: quan}, function(result){
+    alert(result);
+    console.log(result);
+    });
+}
+    </script>
+</html>

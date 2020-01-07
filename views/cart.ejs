@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cart</title>
+      <meta charset="utf-8">
+      <link rel='stylesheet' href='/stylesheets/style.css' />
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body class= 'bg'>
+    <% include partials/nav.ejs %>
+    <% for(i=0; i<prod.length ; i++) { %>
+        <div class="prod">
+            <h3><%= prod[i].prod.productName %></h3>
+           $<p id='<%=prod[i].prod.product_id%>_PRICE'><%= prod[i].prod.price %></p>
+            <p>
+                Quantity: <button style="border-radius: 50%;border: 2px solid #7B241C;background-color: white;color: black;" onclick="addQuan('<%=prod[i].prod.product_id%>')" >+</button> <span id="<%=prod[i].prod.product_id%>_QUAN"> <%- prod[i].prod.quantity %></span>
+                <button style="border-radius: 50%;border: 2px solid #7B241C;background-color: white;color: black;" onclick="remQuan('<%=prod[i].prod.product_id%>')" >-</button>
+            </p>
+            <span id="<%=prod[i].prod.product_id %>_STOCK" > <%- prod[i].stock%></span>
+            <input type='text' style='display:none;' id="<%=prod[i].prod.product_id %>_STOCKA" value='<%= prod[i].stockA%>'>
+       
+        </div><br>
+    <% } %>
+    <div class="prod"><h2>Total: $<span id='total'><%= total %></span></h2><br></div>
+    <div class="prod"><h2>Total(Available): $<span id='ctotal'><%= Atotal %></span></h2><br></div>
+    <a onclick="checkOut()" style="border: 2px solid #7B241C;background-color: #7B241C;color: black;" name="button" class="btn btn-primary">Check Out  <span class ="glyphicon glyphicon-check"></span></a><br><br>
+    
+    <script>
+        function checkOut() {
+            $.post("/cart/checkout", {}, function(result){
+    alert(result +'\nTotal Bill : $'+document.getElementById('ctotal').innerHTML);
+    location.reload();
+    console.log(result+'\nTotal Bill : $'+document.getElementById('ctotal').innerHTML);
+    }); 
+        }
+
+        function addQuan(id) {
+            var quan= (+document.getElementById(id+'_QUAN').innerHTML);
+            var price= (+document.getElementById(id+'_PRICE').innerHTML);
+            var ctotal= (+document.getElementById('ctotal').innerHTML);
+           $.post("/cart/addQuan", {prod_id:id, quan:quan}, function(result){
+              if(result=='OS'){
+                document.getElementById(id+'_STOCK').innerHTML='Status : <span style="color:red">Not In Stock</p>';       
+                    if(document.getElementById(id+'_STOCKA').value=='A'){
+                    document.getElementById(id+'_STOCKA').value='B';    
+                    document.getElementById('ctotal').innerHTML=ctotal-(quan)*price;}      
+                }
+                else
+    document.getElementById('ctotal').innerHTML=    +document.getElementById('ctotal').innerHTML+price;
+                    document.getElementById(id+'_QUAN').innerHTML= +document.getElementById(id+'_QUAN').innerHTML+1;
+    console.log(result);
+
+    document.getElementById('total').innerHTML=    +document.getElementById('total').innerHTML+price;
+    
+    }); 
+        }
+
+        
+        function remQuan(id) {
+            var quan= (+document.getElementById(id+'_QUAN').innerHTML);
+            var price= (+document.getElementById(id+'_PRICE').innerHTML);
+           var ctotal= (+document.getElementById('ctotal').innerHTML);
+            if( +quan>0)
+            $.post("/cart/remQuan", {prod_id:id, quan:quan}, function(result){
+                console.log(result);
+                if(result=='RELOAD')
+                location.reload();
+                if(result=='IS'){
+                    document.getElementById(id+'_STOCK').innerHTML='Status : <span style="color:green">Available</p>';  
+                        if(document.getElementById(id+'_STOCKA').value=='B'){
+                        document.getElementById(id+'_STOCKA').value='A';   
+                        document.getElementById('ctotal').innerHTML=ctotal+(quan-1)*price;  
+                        } 
+                        else 
+                        document.getElementById('ctotal').innerHTML=    +document.getElementById('ctotal').innerHTML-price;
+                    }
+                        document.getElementById(id+'_QUAN').innerHTML= +document.getElementById(id+'_QUAN').innerHTML-1;
+                if( document.getElementById(id+'_QUAN').innerHTML=='0'||document.getElementById(id+'_QUAN').innerHTML==0)
+                location.reload();
+                document.getElementById('total').innerHTML=    +document.getElementById('total').innerHTML-price;
+}); 
+}
+    </script>
+</body>
+</html>

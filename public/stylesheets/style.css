@@ -1,0 +1,117 @@
+body{           
+    padding: 50px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    font-family: arial;
+    margin: 0;
+}
+body, html {
+    height: 100%;
+    margin: 0;
+}
+
+.bg {
+    /* The image used */
+   /*background-image: url("../images/bgImg.jpg");*/
+    /*background-color: #ffcdd2;*/
+    background-color: #dcedc8;
+    /* Full height */
+    height: 100%; 
+
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: repeat;
+    background-size: cover;
+}
+nav{
+    background: #F1948A;
+    padding: 20px 10px;
+}
+nav ul{
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0;
+}
+nav li{
+    list-style-type: none;
+    display: inline-block;
+    margin: 0 10px 0 0;
+}
+nav a{
+    color: #fff;
+    font-size: 18px;
+    background:#7B241C  ;
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+}
+main, header{
+    max-width: 960px;
+    margin: 30px auto;
+    padding: 0 10px;
+    color:#7B241C  ;
+}
+a {
+  color: #00B7FF;
+}
+.google-btn{
+                color: #fff;
+                text-decoration: none;
+                font-size: 18px;
+                padding: 10px;
+                background: #7B241C ;
+}
+input[type=text], select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    resize: vertical;
+}
+input[type=number], select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    resize: vertical;
+}
+
+input[type=submit] {
+    background-color: #7B241C ;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type=submit]:hover {
+    background-color: #7B241C ;
+}
+
+input[type=password] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+}
+
+input[type=file] {
+    width: 30%;
+    background-color: #e0f7fa;
+    color: black;
+    padding: 12px 10px;
+    margin: 8px 0;
+    box-sizing: border-box;
+}
+
+.container {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+}

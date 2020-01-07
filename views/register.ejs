@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+  <head>
+        <meta charset="utf-8">
+        <title>devil</title>
+        <link rel='stylesheet' href='/stylesheets/style.css' />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    </head>
+    <body class="bg">
+        <% include partials/nav.ejs %>
+        <header>
+            <h1>Register Now!</h1>
+        </header>
+        <main>
+            <form action = "/register" method = "POST">
+                Name: <input type="text" name="name" required><br /><br />
+                Username: <input type="text" name="username" required><br /><br />
+                Password: <input type="password" name="password" required><br /><br />
+                Gender:<select name="gender" >
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                   </select><br/><br/><br/>
+                DOB:<input type="date" name="dob" required><br><br>
+                <input type = "submit" value = "Register" />
+            </form>
+        </main>
+    </body>
+</html>
